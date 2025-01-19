@@ -1,8 +1,8 @@
 const { default: mongoose } = require("mongoose");
 
-function DbConnect() {
+async function DbConnect() {
   console.log("connecting");
-  mongoose
+  await mongoose
     .connect(process.env.DB_URL)
     .then(() => {
       console.log("database is connected");
