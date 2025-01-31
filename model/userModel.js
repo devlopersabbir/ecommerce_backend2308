@@ -28,6 +28,10 @@ const userSchema = new Schema(
     image: {
       type: String,
     },
+    isverify: {
+      type: Boolean,
+      default: false,
+    },
     role: {
       type: String,
       enum: ["user", "admin"],
