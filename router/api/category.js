@@ -15,9 +15,22 @@ const storage = multer.diskStorage({
     );
   },
 });
-const upload = multer({ storage: storage });
-
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+});
+function errCheck(err, req, res, next) {
+  if (err) {
+    return res.status(500).send({ success: false, msg: err.message });
+  }
+  next();
+}
 // localhost:5000/api/v1/category/createcategory
-router.post("/createcategory", upload.single("profile"), createcategory);
+router.post(
+  "/createcategory",
+  upload.single("image"),
+  errCheck,
+  createcategory
+);
 
 module.exports = router;

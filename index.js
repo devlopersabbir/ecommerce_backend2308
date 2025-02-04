@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const app = express();
 
 //all middleware
+app.use(express.static("uploads"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());

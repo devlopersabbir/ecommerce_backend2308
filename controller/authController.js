@@ -4,6 +4,7 @@ const EmailValidateCheck = require("../helpers/ValidateEmail");
 const userModel = require("../model/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const otp = require("otp-generator-simple");
 
 async function registrationController(req, res) {
   let { name, email, password, role } = req.body;
@@ -106,5 +107,45 @@ async function loginController(req, res) {
     return res.send({ error: "Invalid Email" });
   }
 }
+async function OtpVerifyController(req, res) {
+  const { email, otp } = req.body;
+  const existinguser = await userModel.findOne({ email });
+  if (existinguser) {
+    if (existinguser.otp == otp) {
+      existinguser.isverify = true;
+      await existinguser.save();
+      return res.status(200).send({ success: true, msg: "OTP Varified" });
+    } else {
+      return res.status(404).send({ success: false, msg: "Invalid OTP" });
+    }
+  } else {
+    return res.status(404).send({ success: false, msg: "user not found" });
+  }
+}
 
-module.exports = { registrationController, loginController };
+async function ResendOtpController(req, res) {
+  const { email } = req.body;
+  const existinguser = await userModel.findOne({ email });
+  if (existinguser) {
+    let resend_otp = otp();
+    existinguser.otp = resend_otp;
+    await existinguser.save();
+
+    setTimeout(async () => {
+      existinguser.otp = null;
+      await existinguser.save();
+    }, 50000);
+    sendEmail(email, resend_otp);
+    return res
+      .status(200)
+      .send({ success: true, msg: "OTP Resend successfull" });
+  } else {
+    return res.status(404).send({ success: false, msg: "OTP not match" });
+  }
+}
+module.exports = {
+  registrationController,
+  loginController,
+  OtpVerifyController,
+  ResendOtpController,
+};
