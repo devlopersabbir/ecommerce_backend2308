@@ -14,7 +14,7 @@ let categorySchema = new Schema(
       type: String,
       required: true,
     },
-    product: [
+    category: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product",

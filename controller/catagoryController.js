@@ -6,7 +6,7 @@ async function createcategory(req, res) {
   let category = new categoryModel({
     name,
     description,
-    image: process.env.HOST_URL + req.file.filename,
+    image: `${process.env.HOST_URL}/${req.file.filename}`,
   });
   await category.save();
   return res.status(201).send({ success: true, msg: "category is created" });

@@ -1,5 +1,5 @@
 const express = require("express");
-const { createcategory } = require("../../controller/catagoryController");
+const { addproductController } = require("../../controller/productController");
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
@@ -26,12 +26,11 @@ function errCheck(err, req, res, next) {
   }
   next();
 }
-// localhost:5000/api/v1/category/createcategory
-router.post(
-  "/createcategory",
-  upload.single("image"),
-  errCheck,
-  createcategory
-);
 
+router.post(
+  "/addproduct",
+  errCheck,
+  upload.array("image"),
+  addproductController
+);
 module.exports = router;

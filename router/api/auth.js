@@ -12,7 +12,9 @@ const router = express.Router();
 router.post("/registration", registrationController);
 // localhost:5000/api/v1/auth/login
 router.post("/login", loginController);
+// localhost:5000/api/v1/auth/otp-verify
 router.post("/otp-verity", OtpVerifyController);
+// localhost:5000/api/v1/auth/resendOtp
 router.post("/resendOtp", ResendOtpController);
 //localhost:5000/api/v1/auth/user
 router.get("/user", authMiddleware, (req, res) => {
