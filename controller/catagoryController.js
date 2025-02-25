@@ -1,5 +1,6 @@
 const categoryModel = require("../model/categoryModel");
-
+const fs = require("fs");
+const path = require("path");
 async function createcategory(req, res) {
   let { name, description } = req.body;
 
@@ -11,5 +12,36 @@ async function createcategory(req, res) {
   await category.save();
   return res.status(201).send({ success: true, msg: "category is created" });
 }
-
-module.exports = { createcategory };
+async function deleteCategory(req, res) {
+  let { id } = req.params;
+  try {
+    let category = await categoryModel.findOneAndDelete({ _id: id });
+    let imagepath = category.image.split("/");
+    let oldimagepath = imagepath[imagepath.length - 1];
+    fs.unlink(
+      `${path.join(__dirname, "../uploads")}/${oldimagepath}`,
+      (err) => {
+        if (err) {
+          res.status(500).json({
+            success: false,
+            msg: `${err.message ? err.message : "Internal server error"}`,
+            err,
+          });
+        } else {
+          res.status(200).json({
+            success: true,
+            msg: `Catagory deleted successfully`,
+            data: category,
+          });
+        }
+      }
+    );
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      msg: `${error.message ? error.message : "Internal server Error"}`,
+      error,
+    });
+  }
+}
+module.exports = { createcategory, deleteCategory };

@@ -1,5 +1,8 @@
 const express = require("express");
-const { createcategory } = require("../../controller/catagoryController");
+const {
+  createcategory,
+  deleteCategory,
+} = require("../../controller/catagoryController");
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
@@ -33,5 +36,6 @@ router.post(
   errCheck,
   createcategory
 );
-
+// localhost:5000/api/v1/category/deleteCategory
+router.delete("/deleteCategory/:id", deleteCategory);
 module.exports = router;
