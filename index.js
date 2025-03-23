@@ -3,7 +3,6 @@ require("dotenv").config();
 const router = require("./router");
 const DbConnect = require("./config/dbConfig");
 const cookieParser = require("cookie-parser");
-
 const app = express();
 
 //all middleware
