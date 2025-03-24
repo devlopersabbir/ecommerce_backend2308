@@ -46,6 +46,7 @@ async function registrationController(req, res) {
       { new: true }
     );
     setTimeout(async () => {
+      console.log("user update with otp null");
       await userModel.findOneAndUpdate(
         { email },
         { $set: { otp: null } },
@@ -133,8 +134,10 @@ async function loginController(req, res) {
 //   }
 // }
 async function OtpVerifyController(req, res) {
+  const email = req.body.email;
+  const otp = req.body.otp;
+
   try {
-    const { email, otp } = req.body;
     if (!email || !otp) {
       return res
         .status(400)
@@ -144,8 +147,10 @@ async function OtpVerifyController(req, res) {
     if (!existinguser) {
       return res.status(404).send({ success: false, msg: "User not found" });
     }
-    console.log("DB OTP:", existinguser.otp, "User OTP:", otp);
-    if (existinguser.otp && existinguser.otp === otp.toString().trim()) {
+    const requestOtp = otp.toString().trim();
+
+    console.log("DB OTP:", existinguser.otp, "User OTP:");
+    if (existinguser.otp && existinguser.otp === Number(requestOtp)) {
       existinguser.isverify = true;
       existinguser.otp = null;
       await existinguser.save();
@@ -156,6 +161,7 @@ async function OtpVerifyController(req, res) {
       return res.status(400).send({ success: false, msg: "Invalid OTP" });
     }
   } catch (error) {
+    console.log(error);
     return res
       .status(500)
       .send({ success: false, msg: "Internal server Error", error });
