@@ -42,7 +42,7 @@ router.post(
   createcategory
 );
 // localhost:5000/api/v1/category/deleteCategory
-router.delete("/deleteCategory/:id", deleteCategory);
+router.delete("/deleteCategory/:id", authMiddleware, deleteCategory);
 
 // localhost:5000/api/v1/category/allCategory
 router.get("/allCategory", allCategory);
@@ -50,6 +50,7 @@ router.get("/allCategory", allCategory);
 // localhost:5000/api/v1/category/updateCategory
 router.patch(
   "/updateCategory/:id",
+  authMiddleware,
   upload.single("image"),
   updateCategoryController
 );
